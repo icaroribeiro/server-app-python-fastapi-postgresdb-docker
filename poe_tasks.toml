@@ -1,0 +1,12 @@
+[tool.poe.tasks]
+lint = "ruff check"
+fix-lint = "ruff check --fix"
+format = "ruff format"
+config-pypath-test = "dotenv -f .env.test set PYTHONPATH $PWD"
+_test = "dotenv -f .env.test run -- poetry run pytest -v -s --cov src"
+test = ["config-pypath-test", "_test"]
+generate-db = "dotenv -f .env.development run -- alembic revision --autogenerate"
+migrate-db = "dotenv -f .env.development run -- alembic upgrade head"
+config-pypath-dev = "dotenv -f .env.development set PYTHONPATH $PWD"
+_start-dev = "dotenv -f .env.development run -- poetry run python src/main.py"
+start-dev = ["config-pypath-dev", "_start-dev"]
